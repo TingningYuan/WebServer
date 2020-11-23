@@ -23,6 +23,21 @@
 class Http_conn
 {
 public:
+    static const int FILENAME_LEN=200;//文件名的最大长度
+    static const int READ_BUFFER_SIZE=2048;//读缓冲区的大小
+    static const int WRITE_BUFFER_SIZE=1024;//写缓冲区大小
+    enum METHOD {GET=0,POST,HEAD,PUT,DELETE,
+                TRACE,OPTIONS,CONNECT,PATCH}; //HTTP请求方法，仅支持GET
+    enum CHECK_STATE {CHECK_STATE_REQUESTLINE=0,
+                      CHECK_STATE_HEADER,
+                      CHECK_STATE_CONTENT};//解析客户请求时，主状态机所处的状态
+    enum HTTP_CODE {NO_REQUEST,GET_REQUEST,BAD_REQUEST,
+                    NO_RESOURCE,FORBIDDEN_REQUEST,FILE_REQUEST,
+                    INTERNAL_ERROR,CLOSED_CONNECTION};//服务器处理HTTP请求的可能结果
+    
+    enum LINE_STATUS { LINE_OK=0,LINE_BAD,LINE_OPEN };//行的读取状态
+    
+public:
     Http_conn()
     {}
     ~Http_conn()
@@ -72,20 +87,7 @@ public:
     //统计用户数量
     static int m_user_count;
 
-public:
-    static const int FILENAME_LEN=200;//文件名的最大长度
-    static const int READ_BUFFER_SIZE=2048;//读缓冲区的大小
-    static const int WRITE_BUFFER_SIZE=1024;//写缓冲区大小
-    enum METHOD {GET=0,POST,HEAD,PUT,DELETE,
-                TRACE,OPTIONS,CONNECT,PATCH}; //HTTP请求方法，仅支持GET
-    enum CHECK_STATE {CHECK_STATE_REQUESTLINE=0,
-                      CHECK_STATE_HEADER,
-                      CHECK_STATE_CONTENT};//解析客户请求时，主状态机所处的状态
-    enum HTTP_CODE {NO_REQUEST,GET_REQUEST,BAD_REQUEST,
-                    NO_RESOURCE,FORBIDDEN_REQUEST,FILE_REQUEST,
-                    INTERNAL_ERROR,CLOSED_CONNECTION};//服务器处理HTTP请求的可能结果
-    
-    enum LINE_STATUS { LINE_OK=0,LINE_BAD,LINE_OPEN };//行的读取状态
+
 
 private:
     //该HTTP连接的socket和对方的socket地址
